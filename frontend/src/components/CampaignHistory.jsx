@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { History, ChevronDown, ChevronRight } from 'lucide-react';
+import { History, ChevronDown, ChevronRight, Search } from 'lucide-react';
 
 const CampaignHistory = () => {
   const [logs, setLogs] = useState([]);
   const [orders, setOrders] = useState([]);
   const [expandedCampaigns, setExpandedCampaigns] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -93,18 +96,45 @@ const CampaignHistory = () => {
 
   const campaigns = Object.values(groupedLogs).sort((a, b) => new Date(b.firstSent) - new Date(a.firstSent));
 
+  const filteredCampaigns = campaigns.filter(campaign => {
+    const searchLower = searchQuery.toLowerCase();
+    const title = campaign.prompt || (campaign.messageB ? "A/B Test Campaign" : (campaign.messageA || "Campaign"));
+    return title.toLowerCase().includes(searchLower) || 
+           campaign.channel.toLowerCase().includes(searchLower);
+  });
+
+  const totalPages = Math.ceil(filteredCampaigns.length / itemsPerPage);
+  const paginatedCampaigns = filteredCampaigns.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-zinc-100 mt-8 overflow-hidden">
-      <div className="p-6 border-b border-zinc-100 flex items-center gap-2">
-        <History className="w-5 h-5 text-zinc-500" />
-        <h2 className="text-xl font-semibold text-zinc-900">Campaign History</h2>
+      <div className="p-6 border-b border-zinc-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <History className="w-5 h-5 text-zinc-500" />
+          <h2 className="text-xl font-semibold text-zinc-900">Campaign History</h2>
+        </div>
+        <div className="relative">
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input 
+            type="text" 
+            placeholder="Search campaigns..." 
+            value={searchQuery}
+            onChange={handleSearch}
+            className="pl-9 pr-4 py-2 border border-zinc-200 rounded-lg text-sm w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
       </div>
       
-      {campaigns.length === 0 ? (
-        <div className="p-8 text-center text-zinc-500">No campaigns launched yet.</div>
+      {paginatedCampaigns.length === 0 ? (
+        <div className="p-8 text-center text-zinc-500">No campaigns found.</div>
       ) : (
         <div className="divide-y divide-zinc-100">
-          {campaigns.map(campaign => (
+          {paginatedCampaigns.map(campaign => (
             <div key={campaign.id} className="flex flex-col">
               <div 
                 className="flex items-center justify-between p-4 hover:bg-zinc-50 cursor-pointer transition-colors"
@@ -208,6 +238,30 @@ const CampaignHistory = () => {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="p-4 border-t border-zinc-100 flex items-center justify-between bg-zinc-50">
+          <span className="text-sm text-zinc-500">
+            Page {currentPage} of {totalPages}
+          </span>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 bg-white border border-zinc-200 rounded text-sm font-medium text-zinc-600 disabled:opacity-50 hover:bg-zinc-100"
+            >
+              Previous
+            </button>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 bg-white border border-zinc-200 rounded text-sm font-medium text-zinc-600 disabled:opacity-50 hover:bg-zinc-100"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

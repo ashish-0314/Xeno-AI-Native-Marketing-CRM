@@ -50,8 +50,8 @@ class MessageQueue {
 
   async handleMessage(msg) {
     const statuses = ['Delivered', 'Failed', 'Clicked'];
-    // Weighted probabilities
-    const randomStatus = Math.random() < 0.7 ? 'Delivered' : (Math.random() < 0.5 ? 'Clicked' : 'Failed');
+    // Weighted probabilities: 40% Delivered, 42% Clicked (60% * 70%), 18% Failed
+    const randomStatus = Math.random() < 0.4 ? 'Delivered' : (Math.random() < 0.7 ? 'Clicked' : 'Failed');
 
     try {
       await axios.post(WEBHOOK_URL, {

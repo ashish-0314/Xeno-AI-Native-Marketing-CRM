@@ -248,7 +248,7 @@ app.post('/api/webhook/receipt', async (req, res) => {
     
     // Simulate Order Attribution on Click
     if (status === 'Clicked' && log) {
-      // 40% chance of placing an order when clicked
+      // 40% chance of placing an order when clicked (reduced to halve overall conversion rate)
       if (Math.random() < 0.4) {
         const orderAmount = Math.floor(Math.random() * 4000) + 500; // Random amount between 500 and 4500
         const newOrder = new Order({
