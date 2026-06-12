@@ -1,0 +1,15 @@
+{
+  "name": "xeno-crm",
+  "version": "1.0.0",
+  "description": "Xeno AI-Native Mini Marketing CRM",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:channel\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:channel": "cd channel-service && npm run dev",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../channel-service && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
