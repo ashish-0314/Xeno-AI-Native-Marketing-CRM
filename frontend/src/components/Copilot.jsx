@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api';
 
 const Copilot = ({ onSegmentResult }) => {
   const [prompt, setPrompt] = useState('');
@@ -14,7 +14,7 @@ const Copilot = ({ onSegmentResult }) => {
 
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:3000/api/ai/segment', { prompt, channel });
+      const res = await api.post('/ai/segment', { prompt, channel });
       onSegmentResult({ ...res.data, prompt });
       setPrompt('');
     } catch (err) {

@@ -6,8 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = 4000;
-const WEBHOOK_URL = 'http://localhost:3000/api/webhook/receipt';
+const PORT = process.env.PORT || 4000;
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
+const WEBHOOK_URL = `${BACKEND_URL}/api/webhook/receipt`;
 
 class MessageQueue {
   constructor() {

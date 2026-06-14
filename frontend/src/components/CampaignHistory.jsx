@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { History, ChevronDown, ChevronRight, Search } from 'lucide-react';
 
 const CampaignHistory = () => {
@@ -13,7 +13,7 @@ const CampaignHistory = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/logs');
+        const res = await api.get('/logs');
         setLogs(res.data.logs || []);
         setOrders(res.data.orders || []);
       } catch (err) {

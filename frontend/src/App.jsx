@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { Plus, Rocket, LayoutDashboard, Users } from 'lucide-react';
+import { Plus, Rocket, LayoutDashboard, Users, Home } from 'lucide-react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import api from './api';
 
 import DashboardStats from './components/DashboardStats';
 import Copilot from './components/Copilot';
@@ -10,9 +10,10 @@ import CustomerTable from './components/CustomerTable';
 import CustomerModal from './components/CustomerModal';
 import CampaignHistory from './components/CampaignHistory';
 import CustomerDirectory from './components/CustomerDirectory';
+import LandingPage from './components/LandingPage';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('campaigns');
+  const [activeTab, setActiveTab] = useState('landing');
   const [isModalOpen, setModalOpen] = useState(false);
   const [customers, setCustomers] = useState([]);
   const [draftMessageA, setDraftMessageA] = useState('');
@@ -66,7 +67,7 @@ function App() {
   const handleRewriteSingle = async (variant) => {
     if (variant === 'A') setRewritingA(true); else setRewritingB(true);
     try {
-      const res = await axios.post('http://localhost:3000/api/ai/rewrite', { prompt: lastPrompt, channel });
+      const res = await api.post('/ai/rewrite', { prompt: lastPrompt, channel });
       
       const newMsg = extractText(res.data.draft_message);
       
@@ -114,7 +115,7 @@ function App() {
     setSending(true);
     try {
       const customerIds = customers.map(c => c._id);
-      await axios.post('http://localhost:3000/api/campaign/send', {
+      await api.post('/campaign/send', {
         customerIds,
         messageA: draftMessageA,
         messageB: draftMessageB,
@@ -149,7 +150,12 @@ function App() {
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Xeno CRM</h1>
+          <h1 
+            className="text-3xl font-bold text-zinc-900 tracking-tight cursor-pointer hover:text-indigo-600 transition-colors"
+            onClick={() => setActiveTab('landing')}
+          >
+            Xeno CRM
+          </h1>
           <p className="text-zinc-500 mt-1">AI-Native Marketing Campaigns</p>
         </div>
         <button 
@@ -161,6 +167,12 @@ function App() {
       </div>
 
       <div className="flex border-b border-zinc-200 mb-8 gap-6">
+        <button 
+          onClick={() => setActiveTab('landing')}
+          className={`pb-3 font-medium flex items-center gap-2 transition-colors ${activeTab === 'landing' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-zinc-500 hover:text-zinc-800'}`}
+        >
+          <Home className="w-4 h-4" /> Home
+        </button>
         <button 
           onClick={() => setActiveTab('campaigns')}
           className={`pb-3 font-medium flex items-center gap-2 transition-colors ${activeTab === 'campaigns' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-zinc-500 hover:text-zinc-800'}`}
@@ -175,8 +187,14 @@ function App() {
         </button>
       </div>
 
-      {activeTab === 'campaigns' ? (
-        <>
+      {activeTab === 'landing' && (
+        <div className="fade-in">
+          <LandingPage onLaunch={() => setActiveTab('campaigns')} />
+        </div>
+      )}
+
+      {activeTab === 'campaigns' && (
+        <div className="fade-in">
           <DashboardStats />
           <Copilot onSegmentResult={handleSegmentResult} />
 
@@ -254,9 +272,13 @@ function App() {
           )}
 
           <CampaignHistory />
-        </>
-      ) : (
-        <CustomerDirectory key={refreshDirectory} />
+        </div>
+      )}
+
+      {activeTab === 'customers' && (
+        <div className="fade-in">
+          <CustomerDirectory key={refreshDirectory} />
+        </div>
       )}
     </div>
   );

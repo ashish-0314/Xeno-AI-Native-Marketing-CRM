@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = 3000;
-const CHANNEL_SERVICE_URL = 'http://localhost:4000/send';
+const CHANNEL_SERVICE_URL = process.env.CHANNEL_SERVICE_URL || 'http://localhost:4000/send';
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))

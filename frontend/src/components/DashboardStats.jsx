@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Activity } from 'lucide-react';
+import { TrendingUp, Users, Send, MousePointerClick, AlertCircle } from 'lucide-react';
+import api from '../api';
 
 const DashboardStats = () => {
   const [stats, setStats] = useState({ Pending: 0, Delivered: 0, Failed: 0, Clicked: 0 });
@@ -8,7 +8,7 @@ const DashboardStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/stats');
+        const res = await api.get('/stats');
         setStats(res.data);
       } catch (err) {
         console.error('Failed to fetch stats', err);
