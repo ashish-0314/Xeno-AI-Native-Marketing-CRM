@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { TrendingUp, Users, Send, MousePointerClick, AlertCircle, Activity } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Activity } from 'lucide-react';
 import api from '../api';
 
 const DashboardStats = () => {

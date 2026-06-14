@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CustomerTable = ({ customers }) => {
   if (!customers || customers.length === 0) {
     return (

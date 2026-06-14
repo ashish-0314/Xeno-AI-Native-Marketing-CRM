@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bot, SplitSquareHorizontal, BarChart3, ChevronRight, UserPlus, Sparkles, Send } from 'lucide-react';
 
 const LandingPage = ({ onLaunch }) => {

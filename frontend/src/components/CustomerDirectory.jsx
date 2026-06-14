@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Edit2, Trash2, Users, Loader2, X, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import CustomerModal from './CustomerModal';
@@ -19,7 +19,7 @@ const CustomerDirectory = () => {
     try {
       const res = await api.get('/customers');
       setCustomers(res.data);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load customers');
     } finally {
       setLoading(false);
@@ -41,7 +41,7 @@ const CustomerDirectory = () => {
       await api.delete(`/customers/${customerToDelete}`);
       toast.success('Customer deleted successfully');
       setCustomers(customers.filter(c => c._id !== customerToDelete));
-    } catch (err) {
+    } catch {
       toast.error('Failed to delete customer');
     } finally {
       setCustomerToDelete(null);

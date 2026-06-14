@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Plus, Rocket, LayoutDashboard, Users, Home } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -131,7 +131,7 @@ function App() {
       setDraftMessageB('');
     } catch (err) {
       toast.error('Failed to launch campaign');
-      console.error(err);
+      console.error(err.message || 'Error occurred');
     } finally {
       setSending(false);
     }

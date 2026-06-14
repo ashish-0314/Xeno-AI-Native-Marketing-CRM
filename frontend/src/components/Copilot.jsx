@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import api from '../api';
 
