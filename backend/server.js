@@ -225,7 +225,7 @@ app.post('/api/campaign/send', async (req, res) => {
     }
 
     try {
-      await axios.post('http://localhost:4000/send', {
+      await axios.post(CHANNEL_SERVICE_URL, {
         messages: logs
       });
       res.json({ message: 'Campaign dispatched to channel service', logs });
