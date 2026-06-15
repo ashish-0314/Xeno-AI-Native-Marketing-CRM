@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 4000;
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 const WEBHOOK_URL = `${BACKEND_URL}/api/webhook/receipt`;
 
+app.get('/ping', (req, res) => res.json({ status: 'awake' }));
+
 class MessageQueue {
   constructor() {
     this.queue = [];

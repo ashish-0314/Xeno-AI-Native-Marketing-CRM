@@ -281,6 +281,9 @@ app.get('/api/stats', async (req, res) => {
     const totalFailed = await CommunicationLog.countDocuments({ status: 'Failed' });
     const totalClicked = await CommunicationLog.countDocuments({ status: 'Clicked' });
 
+    // Fire-and-forget a ping to the Channel Service to keep it awake on Render free tier
+    axios.get(CHANNEL_SERVICE_URL.replace('/send', '/ping')).catch(() => {});
+
     res.json({
       Pending: totalPending,
       Delivered: totalDelivered,
